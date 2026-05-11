@@ -1,12 +1,32 @@
 # Nemotron3 測試整合報告
 
-報告更新時間：2026-05-11T10:02:54+08:00
-模型：`nemotron3:33b`（Ollama）
+報告更新時間：2026-05-11T10:15:00+08:00  
+模型：`nemotron3:33b`（透過 Ollama）  
+倉庫：`tycgsccdc/nemotron3-test-workspace`（branch: `main`）
 
-## 0. 身份資訊
+## 0. 身份資訊與分工
 
-- 報告整理者 / 測試執行協作者：5.3-CODEX
-- 專案擁有者 / GitHub 上傳者：`tycgsccdc`
+| 角色 | 對應對象 | 說明 |
+|---|---|---|
+| 專案擁有者 / GitHub 上傳者 | `tycgsccdc` | 倉庫所有者，負責推送與審閱 |
+| 測試執行協作者 / 報告整理者 | 5.3-CODEX | 撰寫腳本、跑測試、生成原始 Markdown 報告 |
+| 報告清楚化編輯（本次） | Claude（Cowork mode） | 補充執行摘要、失敗案例分析、結論建議 |
+
+## 0.1 執行摘要（TL;DR）
+
+本次針對 Ollama 上的 `nemotron3:33b` 共做了三輪測試，合計 22 題，整體通過率 **19 / 22 ≒ 86.4 %**。
+
+- 文字（`think=true`）：8 題 → **7 pass / 1 fail**，平均延遲 2.20 秒，平均 86.8 tok/s。
+- 文字（`think=false`）：8 題 → **7 pass / 1 fail**，平均延遲 1.00 秒，平均 88.7 tok/s。
+- 多模態（Vision + Audio）：6 題 → **5 pass / 1 fail**，平均延遲 2.28 秒，平均 105.7 tok/s。
+
+**主要結論**
+
+1. 文字能力（QA、翻譯、結構化輸出、程式生成、數學、推理、安全拒答）表現穩定，兩種 `think` 模式各只有 1 題失敗。
+2. `think=false` 在延遲表現上明顯較佳（約為 `think=true` 的一半），且通過率相同，日常 API 整合建議優先採用 `think=false`。
+3. 視覺能力（OCR、形狀計數、長條圖判讀、動物辨識、跨圖比較）全數通過，Vision 表現可用於正式場景。
+4. 音訊輸入透過目前 Ollama `/api/chat` 介面**不支援**，模型直接回覆「沒有收到音檔」，需改採其他語音 → 文字管線後再交給 LLM。
+5. 兩個文字失敗案例為「中文摘要被截斷」與「英文 QA 缺關鍵字（Rayleigh / scattering）」，皆屬於 `num_predict` 與關鍵字判定方式的限制，並非模型語意錯誤。
 
 ## 1. 我實際做了什麼
 
@@ -548,7 +568,37 @@ I'm sorry, but I don't have access to the audio file you're referring to. Please
 - prompt_eval_count: `23`
 - eval_count: `39`
 
-## 7. 相關資料檔案（可追溯）
+## 7. 失敗案例分析
+
+三輪測試共 3 題未通過，皆**非語意錯誤**，分別為以下原因。建議後續調整測試設定或判定條件後重跑。
+
+### 7.1 文字 `think=true` ─ t02_zh_summary（中文摘要）
+
+- 現象：模型 `done_reason=length`，回覆內容為空字串（`eval_count=220` 但被截斷在 think 區段）。
+- 原因推測：`think=true` 模式下模型先輸出思考過程，`num_predict=220` 還沒進入正式回覆就被截掉。
+- 建議：將 `num_predict` 提高到 512 以上，或在 `think=true` 時關閉「思考輸出計入 tokens」的設定。
+
+### 7.2 文字 `think=false` ─ t01_en_qa（為何天空是藍色）
+
+- 現象：模型語意正確（解釋大氣分子散射短波長），但回覆中沒有出現英文關鍵字 `Rayleigh` 與 `scattering`。
+- 原因推測：判定條件是嚴格關鍵字比對；模型用了 "shorter‑wavelength light" 等同義表述。
+- 建議：判定改為「同義詞 OR」或加入 `scatter` 詞根匹配；模型本身回答正確。
+
+### 7.3 多模態 ─ a01_audio_attempt（音訊轉錄）
+
+- 現象：模型回覆「沒有收到音檔，請提供更多 context」。
+- 原因：Ollama `/api/chat` 目前對 `nemotron3:33b` 不支援 audio binary 直接餵入；模型未拿到任何音訊資料。
+- 建議：改用 `whisper.cpp` / `faster-whisper` 先做 STT，再把文字交給 `nemotron3:33b`；或等待 Ollama 提供原生音訊 modality 支援。
+
+## 8. 結論與建議
+
+1. **整體可用度**：`nemotron3:33b` 在文字與視覺面表現穩定，可作為本地離線 LLM 的主力模型之一；安全拒答行為一致（兩輪皆 pass）。
+2. **參數建議**：日常使用建議 `temperature=0.2`、`num_predict≥256`、`think=false`；需要顯式思考鏈時再開 `think=true` 並把 `num_predict` 拉到 512+。
+3. **多模態使用方式**：Vision 可直接送圖；Audio 目前需另接 STT 前處理，不要期待 `nemotron3:33b` 自行讀取音檔。
+4. **測試判定改進**：本輪兩個 fail 都源自關鍵字硬比對，建議下一輪改成「關鍵字集合 + 同義詞 / 詞根」判定，或加入小型 LLM 評審做語意比對。
+5. **後續可追加項目**：長上下文壓力測試、中文長文寫作、Tool calling / Function calling、多輪對話一致性、繁體中文 vs 簡體中文輸出穩定度。
+
+## 9. 相關資料檔案（可追溯）
 
 - 文字測試（think=true）原始結果：`results/nemotron3_test_think_true_results.json`
 - 文字測試（think=false）原始結果：`results/nemotron3_test_think_false_results.json`
