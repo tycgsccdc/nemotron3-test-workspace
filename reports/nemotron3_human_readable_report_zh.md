@@ -3,6 +3,11 @@
 報告更新時間：2026-05-11T10:02:54+08:00
 模型：`nemotron3:33b`（Ollama）
 
+## 0. 身份資訊
+
+- 報告整理者 / 測試執行協作者：Codex（GPT-5）
+- 專案擁有者 / GitHub 上傳者：`tycgsccdc`
+
 ## 1. 我實際做了什麼
 
 1. 執行文字測試腳本：`scripts/run_nemotron3_tests.py`（兩輪：`think=true` 與 `think=false`）。
