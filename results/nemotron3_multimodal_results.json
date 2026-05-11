@@ -1,0 +1,176 @@
+{
+  "model": "nemotron3:33b",
+  "started_at": "2026-05-11T09:30:33+08:00",
+  "ended_at": "2026-05-11T09:30:47+08:00",
+  "total": 6,
+  "pass": 5,
+  "fail": 1,
+  "error": 0,
+  "assets": {
+    "v01_text": "/Users/tycg/Desktop/nemotron3-test-workspace/assets/multimodal_assets/v01_text.png",
+    "v02_shapes": "/Users/tycg/Desktop/nemotron3-test-workspace/assets/multimodal_assets/v02_shapes.png",
+    "v03_barchart": "/Users/tycg/Desktop/nemotron3-test-workspace/assets/multimodal_assets/v03_barchart.png",
+    "v04_cat": "/Users/tycg/Desktop/nemotron3-test-workspace/assets/multimodal_assets/v04_cat.jpg",
+    "v05_a": "/Users/tycg/Desktop/nemotron3-test-workspace/assets/multimodal_assets/v05_a_orange.png",
+    "v05_b": "/Users/tycg/Desktop/nemotron3-test-workspace/assets/multimodal_assets/v05_b_green.png",
+    "a01_audio": "/Users/tycg/Desktop/nemotron3-test-workspace/assets/multimodal_assets/a01_taipei.aiff"
+  },
+  "results": [
+    {
+      "id": "v01_ocr_text",
+      "status": "pass",
+      "check": "needs TAIPEI + 101",
+      "done_reason": "stop",
+      "elapsed_s": 5.012,
+      "tokens_per_sec": 96.449,
+      "response": "\nTAIPEI101",
+      "error": "",
+      "raw": {
+        "model": "nemotron3:33b",
+        "created_at": "2026-05-11T01:30:38.667485Z",
+        "message": {
+          "role": "assistant",
+          "content": "\nTAIPEI101"
+        },
+        "done": true,
+        "done_reason": "stop",
+        "total_duration": 5005595834,
+        "load_duration": 4328630625,
+        "prompt_eval_count": 386,
+        "prompt_eval_duration": 281292166,
+        "eval_count": 9,
+        "eval_duration": 93313376
+      }
+    },
+    {
+      "id": "v02_count_shapes",
+      "status": "pass",
+      "check": "needs 3 red circles and 2 blue squares",
+      "done_reason": "stop",
+      "elapsed_s": 0.834,
+      "tokens_per_sec": 91.895,
+      "response": "\n{\"red_circles\": 3, \"blue_squares\": 2}",
+      "error": "",
+      "raw": {
+        "model": "nemotron3:33b",
+        "created_at": "2026-05-11T01:30:39.501867Z",
+        "message": {
+          "role": "assistant",
+          "content": "\n{\"red_circles\": 3, \"blue_squares\": 2}"
+        },
+        "done": true,
+        "done_reason": "stop",
+        "total_duration": 833134917,
+        "load_duration": 78303792,
+        "prompt_eval_count": 464,
+        "prompt_eval_duration": 314306125,
+        "eval_count": 19,
+        "eval_duration": 206758044
+      }
+    },
+    {
+      "id": "v03_barchart",
+      "status": "pass",
+      "check": "needs banana and value 9",
+      "done_reason": "stop",
+      "elapsed_s": 0.916,
+      "tokens_per_sec": 102.651,
+      "response": "Banana, 9",
+      "error": "",
+      "raw": {
+        "model": "nemotron3:33b",
+        "created_at": "2026-05-11T01:30:40.418738Z",
+        "message": {
+          "role": "assistant",
+          "content": "Banana, 9"
+        },
+        "done": true,
+        "done_reason": "stop",
+        "total_duration": 915169417,
+        "load_duration": 79171833,
+        "prompt_eval_count": 576,
+        "prompt_eval_duration": 726921834,
+        "eval_count": 6,
+        "eval_duration": 58450374
+      }
+    },
+    {
+      "id": "v04_cat_photo",
+      "status": "pass",
+      "check": "needs cat",
+      "done_reason": "stop",
+      "elapsed_s": 5.454,
+      "tokens_per_sec": 88.177,
+      "response": "\nThe animal shown in this photo is a cat. Specifically, it's a close-up image of an orange tabby cat with striking green eyes. The cat's face and upper body are prominently featured, showcasing its distinctive orange fur with darker stripes, white whiskers, and attentive expression as it looks directly at the camera.",
+      "error": "",
+      "raw": {
+        "model": "nemotron3:33b",
+        "created_at": "2026-05-11T01:30:45.875771Z",
+        "message": {
+          "role": "assistant",
+          "content": "\nThe animal shown in this photo is a cat. Specifically, it's a close-up image of an orange tabby cat with striking green eyes. The cat's face and upper body are prominently featured, showcasing its distinctive orange fur with darker stripes, white whiskers, and attentive expression as it looks directly at the camera."
+        },
+        "done": true,
+        "done_reason": "stop",
+        "total_duration": 5452194958,
+        "load_duration": 78291875,
+        "prompt_eval_count": 2577,
+        "prompt_eval_duration": 4358154750,
+        "eval_count": 68,
+        "eval_duration": 771172253
+      }
+    },
+    {
+      "id": "v05_multi_image_compare",
+      "status": "pass",
+      "check": "needs first/image A as orange",
+      "done_reason": "stop",
+      "elapsed_s": 0.856,
+      "tokens_per_sec": 165.399,
+      "response": "first",
+      "error": "",
+      "raw": {
+        "model": "nemotron3:33b",
+        "created_at": "2026-05-11T01:30:46.731938Z",
+        "message": {
+          "role": "assistant",
+          "content": "first"
+        },
+        "done": true,
+        "done_reason": "stop",
+        "total_duration": 854292042,
+        "load_duration": 71273375,
+        "prompt_eval_count": 609,
+        "prompt_eval_duration": 595286958,
+        "eval_count": 2,
+        "eval_duration": 12091959
+      }
+    },
+    {
+      "id": "a01_audio_attempt",
+      "status": "fail",
+      "check": "audio did not produce expected transcript",
+      "done_reason": "stop",
+      "elapsed_s": 0.592,
+      "tokens_per_sec": 89.45,
+      "response": "\nI'm sorry, but I don't have access to the audio file you're referring to. Please provide more context or upload the audio file so I can assist you with the transcription.",
+      "error": "",
+      "raw": {
+        "model": "nemotron3:33b",
+        "created_at": "2026-05-11T01:30:47.326693Z",
+        "message": {
+          "role": "assistant",
+          "content": "\nI'm sorry, but I don't have access to the audio file you're referring to. Please provide more context or upload the audio file so I can assist you with the transcription."
+        },
+        "done": true,
+        "done_reason": "stop",
+        "total_duration": 590688417,
+        "load_duration": 73991042,
+        "prompt_eval_count": 23,
+        "prompt_eval_duration": 72511958,
+        "eval_count": 39,
+        "eval_duration": 435995375
+      }
+    }
+  ]
+}
