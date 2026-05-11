@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# Python bytecode/cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local cache
+cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
